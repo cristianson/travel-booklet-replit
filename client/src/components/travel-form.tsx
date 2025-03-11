@@ -16,6 +16,8 @@ import { insertTravelPreferencesSchema, type InsertTravelPreferences } from "@sh
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
+import { Combobox } from "@/components/ui/combobox";
+import { LOCATIONS } from "@/lib/locations";
 
 const INTERESTS = [
   "Culture & History",
@@ -104,7 +106,12 @@ export function TravelForm() {
                   <FormItem>
                     <FormLabel>Where do you want to go?</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter destination" {...field} />
+                      <Combobox
+                        options={LOCATIONS}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        placeholder="Search for a destination..."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
