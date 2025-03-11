@@ -1,46 +1,22 @@
-// Common tourist destinations
-export const LOCATIONS = [
-  // Popular Cities
-  "Paris, France",
-  "Tokyo, Japan",
-  "New York City, USA",
-  "London, UK",
-  "Rome, Italy",
-  "Barcelona, Spain",
-  "Dubai, UAE",
-  "Singapore",
-  "Bangkok, Thailand",
-  "Sydney, Australia",
-  "Amsterdam, Netherlands",
-  "Berlin, Germany",
-  "Venice, Italy",
-  "Prague, Czech Republic",
-  "Istanbul, Turkey",
-  "Hong Kong",
-  "Seoul, South Korea",
-  "Rio de Janeiro, Brazil",
-  "Cape Town, South Africa",
-  "Mumbai, India",
-  
-  // Countries
-  "France",
-  "Japan",
-  "Italy",
-  "Spain",
-  "United States",
-  "United Kingdom",
-  "Australia",
-  "Germany",
-  "Canada",
-  "Thailand",
-  "Greece",
-  "Portugal",
-  "Switzerland",
-  "New Zealand",
-  "Norway",
-  "Sweden",
-  "Brazil",
-  "Mexico",
-  "Egypt",
-  "Morocco"
-].sort();
+import { countries, cities } from 'countries-list';
+
+// Convert countries object to array of location strings
+const countryList = Object.entries(countries).map(([_, country]) => country.name);
+
+// Create a function to get filtered locations based on search input
+export function getFilteredLocations(search: string): string[] {
+  const searchLower = search.toLowerCase();
+
+  // Return all locations if no search term
+  if (!search) {
+    return countryList;
+  }
+
+  // Filter countries that match the search term
+  return countryList.filter(location =>
+    location.toLowerCase().includes(searchLower)
+  );
+}
+
+// Export the full list for initial display
+export const LOCATIONS = countryList;

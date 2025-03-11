@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { getFilteredLocations } from "@/lib/locations"
 
 interface ComboboxProps {
   options: string[]
@@ -27,6 +28,11 @@ interface ComboboxProps {
 
 export function Combobox({ options, value, onValueChange, placeholder = "Select..." }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
+  const [searchTerm, setSearchTerm] = React.useState("")
+  const filteredOptions = React.useMemo(
+    () => getFilteredLocations(searchTerm),
+    [searchTerm]
+  )
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -43,16 +49,21 @@ export function Combobox({ options, value, onValueChange, placeholder = "Select.
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Search location..." />
+          <CommandInput 
+            placeholder="Search location..." 
+            value={searchTerm}
+            onValueChange={setSearchTerm}
+          />
           <CommandEmpty>No location found.</CommandEmpty>
           <CommandGroup className="max-h-60 overflow-y-auto">
-            {options.map((option) => (
+            {filteredOptions.map((option) => (
               <CommandItem
                 key={option}
                 value={option}
                 onSelect={() => {
                   onValueChange(option)
                   setOpen(false)
+                  setSearchTerm("")
                 }}
               >
                 <Check
