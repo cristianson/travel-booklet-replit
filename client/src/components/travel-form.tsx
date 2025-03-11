@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation } from "wouter";
@@ -48,7 +47,6 @@ const ACTIVITY_LEVELS = [
 export function TravelForm() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [step, setStep] = useState(1);
 
   const form = useForm<InsertTravelPreferences>({
     resolver: zodResolver(insertTravelPreferencesSchema),
@@ -84,132 +82,52 @@ export function TravelForm() {
     }
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    if (step < 3) {
-      setStep(step + 1);
-    } else {
-      mutation.mutate(data);
-    }
-  });
-
   return (
     <Card className="max-w-2xl mx-auto">
       <CardContent className="p-6">
         <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-6">
-            {step === 1 && (
-              <>
+          <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-6">
+            <div className="grid grid-cols-1 gap-6">
+              {/* Destination */}
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Where do you want to go?</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter destination" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Dates */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="location"
+                  name="startDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Where do you want to go?</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter destination" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="startDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Start Date</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button variant="outline">
-                                {format(field.value, "PPP")}
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) => date < new Date()}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>End Date</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button variant="outline">
-                                {format(field.value, "PPP")}
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) => date < form.watch("startDate")}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </>
-            )}
-
-            {step === 2 && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="interests"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>What interests you?</FormLabel>
-                      <div className="grid grid-cols-2 gap-4">
-                        {INTERESTS.map((interest) => (
-                          <FormField
-                            key={interest}
-                            control={form.control}
-                            name="interests"
-                            render={({ field }) => (
-                              <FormItem className="flex items-center space-x-3">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(interest)}
-                                    onCheckedChange={(checked) => {
-                                      const interests = field.value || [];
-                                      if (checked) {
-                                        field.onChange([...interests, interest]);
-                                      } else {
-                                        field.onChange(interests.filter((i) => i !== interest));
-                                      }
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="text-sm font-normal">
-                                  {interest}
-                                </FormLabel>
-                              </FormItem>
-                            )}
+                      <FormLabel>Start Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button variant="outline" className="w-full">
+                              {format(field.value, "PPP")}
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < new Date()}
                           />
-                        ))}
-                      </div>
+                        </PopoverContent>
+                      </Popover>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -217,108 +135,170 @@ export function TravelForm() {
 
                 <FormField
                   control={form.control}
-                  name="activityLevel"
+                  name="endDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Preferred Activity Level</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="grid grid-cols-2 gap-4"
-                        >
-                          {ACTIVITY_LEVELS.map((level) => (
-                            <FormItem key={level}>
+                      <FormLabel>End Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button variant="outline" className="w-full">
+                              {format(field.value, "PPP")}
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < form.watch("startDate")}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Interests */}
+              <FormField
+                control={form.control}
+                name="interests"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>What interests you?</FormLabel>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {INTERESTS.map((interest) => (
+                        <FormField
+                          key={interest}
+                          control={form.control}
+                          name="interests"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center space-x-3">
                               <FormControl>
-                                <div className="flex items-center space-x-3">
-                                  <RadioGroupItem value={level} id={level} />
-                                  <FormLabel htmlFor={level} className="text-sm font-normal">
-                                    {level}
-                                  </FormLabel>
-                                </div>
+                                <Checkbox
+                                  checked={field.value?.includes(interest)}
+                                  onCheckedChange={(checked) => {
+                                    const interests = field.value || [];
+                                    if (checked) {
+                                      field.onChange([...interests, interest]);
+                                    } else {
+                                      field.onChange(interests.filter((i) => i !== interest));
+                                    }
+                                  }}
+                                />
                               </FormControl>
+                              <FormLabel className="text-sm font-normal">
+                                {interest}
+                              </FormLabel>
                             </FormItem>
-                          ))}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-
-            {step === 3 && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="diningPreferences"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Dining Preferences</FormLabel>
-                      <div className="grid grid-cols-2 gap-4">
-                        {DINING_PREFERENCES.map((pref) => (
-                          <FormField
-                            key={pref}
-                            control={form.control}
-                            name="diningPreferences"
-                            render={({ field }) => (
-                              <FormItem className="flex items-center space-x-3">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(pref)}
-                                    onCheckedChange={(checked) => {
-                                      const prefs = field.value || [];
-                                      if (checked) {
-                                        field.onChange([...prefs, pref]);
-                                      } else {
-                                        field.onChange(prefs.filter((p) => p !== pref));
-                                      }
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="text-sm font-normal">
-                                  {pref}
-                                </FormLabel>
-                              </FormItem>
-                            )}
-                          />
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="additionalNotes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Additional Notes</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Any special requirements or preferences?"
-                          {...field}
+                          )}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="flex justify-between pt-4">
-              {step > 1 && (
-                <Button type="button" variant="outline" onClick={() => setStep(step - 1)}>
-                  Previous
-                </Button>
-              )}
-              <Button type="submit" disabled={mutation.isPending}>
-                {step === 3 ? (mutation.isPending ? "Creating..." : "Create Booklet") : "Next"}
-              </Button>
+              {/* Activity Level */}
+              <FormField
+                control={form.control}
+                name="activityLevel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Preferred Activity Level</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+                      >
+                        {ACTIVITY_LEVELS.map((level) => (
+                          <FormItem key={level}>
+                            <FormControl>
+                              <div className="flex items-center space-x-3">
+                                <RadioGroupItem value={level} id={level} />
+                                <FormLabel htmlFor={level} className="text-sm font-normal">
+                                  {level}
+                                </FormLabel>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Dining Preferences */}
+              <FormField
+                control={form.control}
+                name="diningPreferences"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Dining Preferences</FormLabel>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {DINING_PREFERENCES.map((pref) => (
+                        <FormField
+                          key={pref}
+                          control={form.control}
+                          name="diningPreferences"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center space-x-3">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(pref)}
+                                  onCheckedChange={(checked) => {
+                                    const prefs = field.value || [];
+                                    if (checked) {
+                                      field.onChange([...prefs, pref]);
+                                    } else {
+                                      field.onChange(prefs.filter((p) => p !== pref));
+                                    }
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="text-sm font-normal">
+                                {pref}
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Additional Notes */}
+              <FormField
+                control={form.control}
+                name="additionalNotes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Additional Notes</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Any special requirements or preferences?"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+
+            <Button type="submit" className="w-full" disabled={mutation.isPending}>
+              {mutation.isPending ? "Creating..." : "Create Travel Booklet"}
+            </Button>
           </form>
         </Form>
       </CardContent>
