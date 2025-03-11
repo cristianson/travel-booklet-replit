@@ -24,6 +24,7 @@ export class MemStorage implements IStorage {
       interests: prefs.interests,
       activityLevel: prefs.activityLevel,
       diningPreferences: prefs.diningPreferences,
+      restaurantBudget: prefs.restaurantBudget,
       additionalNotes: prefs.additionalNotes || null,
       bookletContent: content,
     };

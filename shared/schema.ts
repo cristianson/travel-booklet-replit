@@ -10,6 +10,7 @@ export const travelPreferences = pgTable("travel_preferences", {
   interests: text("interests").array().notNull(),
   activityLevel: text("activity_level").notNull(),
   diningPreferences: text("dining_preferences").array().notNull(),
+  restaurantBudget: integer("restaurant_budget").notNull(),
   additionalNotes: text("additional_notes"),
   bookletContent: jsonb("booklet_content").notNull(),
 });
@@ -21,6 +22,7 @@ export const insertTravelPreferencesSchema = createInsertSchema(travelPreference
     diningPreferences: z.array(z.string()).min(1, "Select at least one dining preference"),
     startDate: z.coerce.date().min(new Date(), "Start date must be in the future"),
     endDate: z.coerce.date(),
+    restaurantBudget: z.number().min(1).max(5),
   })
   .refine((data) => data.endDate > data.startDate, {
     message: "End date must be after start date",

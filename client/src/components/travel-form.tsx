@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { insertTravelPreferencesSchema, type InsertTravelPreferences } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Slider } from "@/components/ui/slider";
 
 const INTERESTS = [
   "Culture & History",
@@ -44,6 +45,14 @@ const ACTIVITY_LEVELS = [
   "Very Active"
 ];
 
+const BUDGET_MARKS = [
+  { value: 1, label: "$" },
+  { value: 2, label: "$$" },
+  { value: 3, label: "$$$" },
+  { value: 4, label: "$$$$" },
+  { value: 5, label: "$$$$$" },
+];
+
 export function TravelForm() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -57,6 +66,7 @@ export function TravelForm() {
       interests: [],
       activityLevel: "Moderate",
       diningPreferences: [],
+      restaurantBudget: 3,
       additionalNotes: ""
     }
   });
@@ -270,6 +280,42 @@ export function TravelForm() {
                           )}
                         />
                       ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Restaurant Budget Slider */}
+              <FormField
+                control={form.control}
+                name="restaurantBudget"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Restaurant Budget</FormLabel>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        {BUDGET_MARKS.map(({ value, label }) => (
+                          <span
+                            key={value}
+                            className={`text-sm font-medium ${
+                              field.value === value ? 'text-primary' : 'text-muted-foreground'
+                            }`}
+                          >
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                      <FormControl>
+                        <Slider
+                          min={1}
+                          max={5}
+                          step={1}
+                          value={[field.value]}
+                          onValueChange={(vals) => field.onChange(vals[0])}
+                          className="w-full"
+                        />
+                      </FormControl>
                     </div>
                     <FormMessage />
                   </FormItem>
