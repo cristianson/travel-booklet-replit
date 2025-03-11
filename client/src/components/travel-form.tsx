@@ -49,8 +49,6 @@ const BUDGET_MARKS = [
   { value: 1, label: "$" },
   { value: 2, label: "$$" },
   { value: 3, label: "$$$" },
-  { value: 4, label: "$$$$" },
-  { value: 5, label: "$$$$$" },
 ];
 
 export function TravelForm() {
@@ -66,7 +64,7 @@ export function TravelForm() {
       interests: [],
       activityLevel: "Moderate",
       diningPreferences: [],
-      restaurantBudget: 3,
+      restaurantBudget: 2,
       additionalNotes: ""
     }
   });
@@ -309,7 +307,7 @@ export function TravelForm() {
                       <FormControl>
                         <Slider
                           min={1}
-                          max={5}
+                          max={3}
                           step={1}
                           value={[field.value]}
                           onValueChange={(vals) => field.onChange(vals[0])}

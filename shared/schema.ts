@@ -22,7 +22,7 @@ export const insertTravelPreferencesSchema = createInsertSchema(travelPreference
     diningPreferences: z.array(z.string()).min(1, "Select at least one dining preference"),
     startDate: z.coerce.date().min(new Date(), "Start date must be in the future"),
     endDate: z.coerce.date(),
-    restaurantBudget: z.number().min(1).max(5),
+    restaurantBudget: z.number().min(1).max(3),
   })
   .refine((data) => data.endDate > data.startDate, {
     message: "End date must be after start date",
