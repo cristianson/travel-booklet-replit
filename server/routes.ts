@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { storage } from "./storage";
 import { insertTravelPreferencesSchema, type TravelPreferences } from "@shared/schema";
 import { getTravelRecommendations } from "./lib/perplexity";
-import { generateBookletContent } from "./lib/openai";
+import { generateBookletContent, generateTravelPrompt } from "./lib/openai";
 import { ZodError } from "zod";
 
 export async function registerRoutes(app: Express) {
@@ -20,15 +20,19 @@ export async function registerRoutes(app: Express) {
         interests: preferences.interests,
         activityLevel: preferences.activityLevel,
         diningPreferences: preferences.diningPreferences,
+        restaurantBudget: preferences.restaurantBudget,
         additionalNotes: preferences.additionalNotes || null,
         bookletContent: {}, // temporary empty content
       };
 
-      // Get recommendations from Perplexity
-      const recommendations = await getTravelRecommendations(tempPrefs);
+      // Step 1: Generate optimized prompt with OpenAI
+      const optimizedPrompt = await generateTravelPrompt(tempPrefs);
 
-      // Generate booklet content with OpenAI
-      const bookletContent = await generateBookletContent(tempPrefs);
+      // Step 2: Get recommendations from Perplexity using the optimized prompt
+      const recommendations = await getTravelRecommendations(tempPrefs, optimizedPrompt);
+
+      // Step 3: Format the final booklet content with OpenAI
+      const bookletContent = await generateBookletContent(tempPrefs, recommendations);
 
       // Store preferences and generated content
       const result = await storage.createTravelPreferences(preferences, bookletContent);

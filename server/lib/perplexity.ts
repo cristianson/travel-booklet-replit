@@ -4,7 +4,7 @@ if (!process.env.PERPLEXITY_API_KEY) {
   throw new Error("PERPLEXITY_API_KEY is required");
 }
 
-export async function getTravelRecommendations(prefs: TravelPreferences) {
+export async function getTravelRecommendations(prefs: TravelPreferences, optimizedPrompt: string): Promise<string> {
   const response = await fetch("https://api.perplexity.ai/chat/completions", {
     method: "POST",
     headers: {
@@ -20,18 +20,10 @@ export async function getTravelRecommendations(prefs: TravelPreferences) {
         },
         {
           role: "user",
-          content: `Create a travel guide for ${prefs.location} with the following preferences:
-          - Travel dates: ${prefs.startDate} to ${prefs.endDate}
-          - Interests: ${prefs.interests.join(", ")}
-          - Activity level: ${prefs.activityLevel}
-          - Dining preferences: ${prefs.diningPreferences.join(", ")}
-          - Additional notes: ${prefs.additionalNotes || "None"}
-          
-          Provide recommendations in JSON format with sections for activities, dining, and general tips.`
+          content: optimizedPrompt
         }
       ],
-      temperature: 0.2,
-      response_format: { type: "json_object" }
+      temperature: 0.2
     })
   });
 
