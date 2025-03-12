@@ -10,11 +10,11 @@ deploymentTarget = "cloudrun"
 run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
-localPort = 5000
+localPort = 3000
 externalPort = 80
 
 [[ports]]
-localPort = 5001
+localPort = 3000
 externalPort = 3000
 
 [workflows]
