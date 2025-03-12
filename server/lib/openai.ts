@@ -29,10 +29,10 @@ export async function generateTravelPrompt(
         - Dining preferences: ${prefs.diningPreferences.join(", ")}
         - Restaurant budget: ${
           prefs.restaurantBudget === 1
-            ? 'Budget-friendly'
+            ? "Budget-friendly"
             : prefs.restaurantBudget === 2
-            ? 'Moderate'
-            : 'High-end'
+            ? "Moderate"
+            : "High-end"
         }
         - Additional notes: ${prefs.additionalNotes || "None"}
 
@@ -64,14 +64,14 @@ Create well-structured sections using proper headings, lists, and emphasis. For 
 5. Include callout boxes for important tips
 6. Add dividers between major sections
 
-Remember to format the final response as a JSON object with title, summary, and sections array where each section has a title and properly formatted Markdown content.`
+Remember to format the final response as a JSON object with title, summary, and sections array where each section has a title and properly formatted Markdown content.`,
       },
       {
         role: "user",
-        content: `Create a comprehensive travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}`
-      }
+        content: `Create a comprehensive travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}`,
+      },
     ],
-    response_format: { type: "json_object" }
+    response_format: { type: "json_object" },
   });
 
   const content = response.choices[0].message.content;
