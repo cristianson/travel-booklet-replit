@@ -8,13 +8,16 @@ if (!process.env.OPENAI_API_KEY) {
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function generateTravelPrompt(prefs: TravelPreferences): Promise<string> {
+export async function generateTravelPrompt(
+  prefs: TravelPreferences
+): Promise<string> {
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: "You are a travel expert helping to create detailed prompts for travel recommendations. Create a comprehensive prompt that will help get the most relevant travel information."
+        content:
+          "You are a travel expert helping to create detailed prompts for travel recommendations. Create a comprehensive prompt that will help get the most relevant travel information.",
       },
       {
         role: "user",
@@ -24,11 +27,17 @@ export async function generateTravelPrompt(prefs: TravelPreferences): Promise<st
         - Interests: ${prefs.interests.join(", ")}
         - Activity level: ${prefs.activityLevel}
         - Dining preferences: ${prefs.diningPreferences.join(", ")}
-        - Restaurant budget: ${prefs.restaurantBudget === 1 ? 'Budget-friendly' : prefs.restaurantBudget === 2 ? 'Moderate' : 'High-end'}
+        - Restaurant budget: ${
+          prefs.restaurantBudget === 1
+            ? "Budget-friendly"
+            : prefs.restaurantBudget === 2
+            ? "Moderate"
+            : "High-end"
+        }
         - Additional notes: ${prefs.additionalNotes || "None"}
 
-        Format the prompt to get specific recommendations for activities, dining, and practical tips that match these preferences.`
-      }
+        Format the prompt to get specific recommendations for activities, dining, and practical tips that match these preferences.`,
+      },
     ],
     temperature: 0.7,
   });
@@ -36,20 +45,24 @@ export async function generateTravelPrompt(prefs: TravelPreferences): Promise<st
   return response.choices[0].message.content || "";
 }
 
-export async function generateBookletContent(prefs: TravelPreferences, travelRecommendations: string): Promise<BookletContent> {
+export async function generateBookletContent(
+  prefs: TravelPreferences,
+  travelRecommendations: string
+): Promise<BookletContent> {
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: "You are a professional travel writer creating engaging and informative travel booklets. Format the recommendations into a well-structured travel guide."
+        content:
+          "You are a professional travel writer creating engaging and informative travel booklets. Format the recommendations into a well-structured travel guide.",
       },
       {
         role: "user",
-        content: `Create a travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}\n\nFormat the response as JSON with a title, summary, and sections array where each section has a title and content.`
-      }
+        content: `Create a travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}\n\nFormat the response as JSON with a title, summary, and sections array where each section has a title and content.`,
+      },
     ],
-    response_format: { type: "json_object" }
+    response_format: { type: "json_object" },
   });
 
   const content = response.choices[0].message.content;
