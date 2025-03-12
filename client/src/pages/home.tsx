@@ -26,7 +26,7 @@ export default function Home() {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Create Your Perfect Travel Booklettttt
+            Create Your Perfect Travel Booklet
           </h1>
           <p className="text-muted-foreground text-lg">
             Tell us about your dream trip and we'll create a personalized travel
