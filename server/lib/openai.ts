@@ -55,30 +55,20 @@ export async function generateBookletContent(
       {
         role: "system",
         content: `You are a professional travel writer creating engaging and informative travel booklets.
-Format the recommendations into a well-structured travel guide using Markdown formatting.
+Create well-structured sections using proper headings, lists, and emphasis. For the content in each section:
 
-Use the following Markdown elements:
-- ## for section headers
-- ### for subsection headers
-- * or - for bullet points
-- 1. for numbered lists
-- **bold** for emphasis
-- > for important tips or callouts
-- ---- for horizontal rules between major sections
+1. Use proper heading levels (Example: "Activities" as a main section)
+2. Create clear subsections when needed (Example: "For Nature Lovers" under Activities)
+3. Use bullet points for lists of recommendations
+4. Bold important information or highlights
+5. Include callout boxes for important tips
+6. Add dividers between major sections
 
-Example formatting:
-## Activities
-Here's an overview of recommended activities based on your preferences.
-
-### For Nature Lovers
-* **Morning hike** at [location] - Perfect for early risers
-* **Sunset viewpoint** at [location] - Spectacular photography opportunity
-
-> Pro tip: Book the morning activities in advance to avoid crowds.`
+Remember to format the final response as a JSON object with title, summary, and sections array where each section has a title and properly formatted Markdown content.`
       },
       {
         role: "user",
-        content: `Create a travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}\n\nFormat the response as JSON with a title, summary, and sections array where each section has a title and content. Use Markdown formatting in the content for better readability.`
+        content: `Create a comprehensive travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}`
       }
     ],
     response_format: { type: "json_object" }
