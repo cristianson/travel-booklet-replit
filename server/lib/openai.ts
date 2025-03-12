@@ -29,10 +29,10 @@ export async function generateTravelPrompt(
         - Dining preferences: ${prefs.diningPreferences.join(", ")}
         - Restaurant budget: ${
           prefs.restaurantBudget === 1
-            ? "Budget-friendly"
+            ? 'Budget-friendly'
             : prefs.restaurantBudget === 2
-            ? "Moderate"
-            : "High-end"
+            ? 'Moderate'
+            : 'High-end'
         }
         - Additional notes: ${prefs.additionalNotes || "None"}
 
@@ -54,15 +54,34 @@ export async function generateBookletContent(
     messages: [
       {
         role: "system",
-        content:
-          "You are a professional travel writer creating engaging and informative travel booklets. Format the recommendations into a well-structured travel guide.",
+        content: `You are a professional travel writer creating engaging and informative travel booklets.
+Format the recommendations into a well-structured travel guide using Markdown formatting.
+
+Use the following Markdown elements:
+- ## for section headers
+- ### for subsection headers
+- * or - for bullet points
+- 1. for numbered lists
+- **bold** for emphasis
+- > for important tips or callouts
+- ---- for horizontal rules between major sections
+
+Example formatting:
+## Activities
+Here's an overview of recommended activities based on your preferences.
+
+### For Nature Lovers
+* **Morning hike** at [location] - Perfect for early risers
+* **Sunset viewpoint** at [location] - Spectacular photography opportunity
+
+> Pro tip: Book the morning activities in advance to avoid crowds.`
       },
       {
         role: "user",
-        content: `Create a travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}\n\nFormat the response as JSON with a title, summary, and sections array where each section has a title and content.`,
-      },
+        content: `Create a travel booklet for ${prefs.location} based on these recommendations:\n\n${travelRecommendations}\n\nFormat the response as JSON with a title, summary, and sections array where each section has a title and content. Use Markdown formatting in the content for better readability.`
+      }
     ],
-    response_format: { type: "json_object" },
+    response_format: { type: "json_object" }
   });
 
   const content = response.choices[0].message.content;

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import ReactMarkdown from 'react-markdown';
 import type { TravelPreferences, BookletContent } from "@shared/schema";
 
 export default function Booklet() {
@@ -54,7 +55,9 @@ export default function Booklet() {
         <Card key={index} className="mb-6">
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold mb-4">{section.title}</h2>
-            <div className="prose max-w-none">{section.content}</div>
+            <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none dark:prose-invert">
+              <ReactMarkdown>{section.content}</ReactMarkdown>
+            </div>
           </CardContent>
         </Card>
       ))}
