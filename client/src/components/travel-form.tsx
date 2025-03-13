@@ -3,16 +3,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { Calendar } from "@/components/ui/calendar";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format } from "date-fns";
-import { insertTravelPreferencesSchema, type InsertTravelPreferences } from "@shared/schema";
+import {
+  insertTravelPreferencesSchema,
+  type InsertTravelPreferences,
+} from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
@@ -27,7 +41,7 @@ const INTERESTS = [
   "Art & Museums",
   "Nightlife",
   "Adventure Sports",
-  "Relaxation"
+  "Relaxation",
 ];
 
 const DINING_PREFERENCES = [
@@ -37,15 +51,10 @@ const DINING_PREFERENCES = [
   "Vegetarian",
   "Vegan",
   "Seafood",
-  "International"
+  "International",
 ];
 
-const ACTIVITY_LEVELS = [
-  "Relaxed",
-  "Moderate",
-  "Active",
-  "Very Active"
-];
+const ACTIVITY_LEVELS = ["Relaxed", "Moderate", "Active", "Very Active"];
 
 const BUDGET_MARKS = [
   { value: 1, label: "$" },
@@ -67,8 +76,8 @@ export function TravelForm() {
       activityLevel: "Moderate",
       diningPreferences: [],
       restaurantBudget: 2,
-      additionalNotes: ""
-    }
+      additionalNotes: "",
+    },
   });
 
   const mutation = useMutation({
@@ -79,7 +88,7 @@ export function TravelForm() {
     onSuccess: (data) => {
       toast({
         title: "Success!",
-        description: "Your travel booklet is ready."
+        description: "Your travel booklet is ready.",
       });
       setLocation(`/booklet/${data.id}`);
     },
@@ -87,16 +96,19 @@ export function TravelForm() {
       toast({
         title: "Error",
         description: error.message,
-        variant: "destructive"
+        variant: "destructive",
       });
-    }
+    },
   });
 
   return (
     <Card className="max-w-2xl mx-auto">
       <CardContent className="p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 gap-6">
               {/* Destination */}
               <FormField
@@ -191,7 +203,7 @@ export function TravelForm() {
                           control={form.control}
                           name="interests"
                           render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3">
+                            <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(interest)}
@@ -200,7 +212,9 @@ export function TravelForm() {
                                     if (checked) {
                                       field.onChange([...interests, interest]);
                                     } else {
-                                      field.onChange(interests.filter((i) => i !== interest));
+                                      field.onChange(
+                                        interests.filter((i) => i !== interest)
+                                      );
                                     }
                                   }}
                                 />
@@ -236,7 +250,10 @@ export function TravelForm() {
                             <FormControl>
                               <div className="flex items-center space-x-3">
                                 <RadioGroupItem value={level} id={level} />
-                                <FormLabel htmlFor={level} className="text-sm font-normal">
+                                <FormLabel
+                                  htmlFor={level}
+                                  className="text-sm font-normal"
+                                >
                                   {level}
                                 </FormLabel>
                               </div>
@@ -264,7 +281,7 @@ export function TravelForm() {
                           control={form.control}
                           name="diningPreferences"
                           render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3">
+                            <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(pref)}
@@ -273,7 +290,9 @@ export function TravelForm() {
                                     if (checked) {
                                       field.onChange([...prefs, pref]);
                                     } else {
-                                      field.onChange(prefs.filter((p) => p !== pref));
+                                      field.onChange(
+                                        prefs.filter((p) => p !== pref)
+                                      );
                                     }
                                   }}
                                 />
@@ -304,7 +323,9 @@ export function TravelForm() {
                           <span
                             key={value}
                             className={`text-sm font-medium ${
-                              field.value === value ? 'text-primary' : 'text-muted-foreground'
+                              field.value === value
+                                ? "text-primary"
+                                : "text-muted-foreground"
                             }`}
                           >
                             {label}
@@ -338,7 +359,7 @@ export function TravelForm() {
                       <Textarea
                         placeholder="Any special requirements or preferences?"
                         {...field}
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -347,7 +368,11 @@ export function TravelForm() {
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={mutation.isPending}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={mutation.isPending}
+            >
               {mutation.isPending ? "Creating..." : "Create Travel Booklet"}
             </Button>
           </form>
