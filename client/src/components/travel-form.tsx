@@ -203,7 +203,7 @@ export function TravelForm() {
                           control={form.control}
                           name="interests"
                           render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormItem className="flex items-center space-x-2 space-y-0">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(interest)}
@@ -248,7 +248,7 @@ export function TravelForm() {
                         {ACTIVITY_LEVELS.map((level) => (
                           <FormItem key={level}>
                             <FormControl>
-                              <div className="flex items-center space-x-3">
+                              <div className="flex items-center space-x-2">
                                 <RadioGroupItem value={level} id={level} />
                                 <FormLabel
                                   htmlFor={level}
@@ -281,7 +281,7 @@ export function TravelForm() {
                           control={form.control}
                           name="diningPreferences"
                           render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormItem className="flex items-center space-x-2 space-y-0">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(pref)}
